@@ -1,0 +1,20 @@
+run python ClusterTanimotoMatrix.py -h to see options
+
+* pass in a NxN matrix of scores (if only upper triangle OK, this scripts "clean_matrix" function will fill these in)
+
+* pass in a Nx1 list of the names that map to the indices of the matrix 
+example dbase.list:
+A = index 0 in matrix file
+B = index 1 in matrix file
+so element matrix[0,1] is the Tanimoto score for overlap of ligand A and B
+
+
+* also pass in a Tanimoto cutoff score in the range [0,2] where 0 is no overlap and 2 is maximum overlap
+
+Output (examples below run with a cutoff of 1.0):
+Gens-c1.0.dat: Index of the ligand list that is the center of each cluster (Generator)
+Gens-Names-c1.0.dat: Name of the ligand corresponding to the center of each cluster
+Assignments-1.0.dat: Cluster (Gen) assignment index for each ligand
+Distances-c1.0.dat: Distance from the cluster (Gen) center for each ligand
+Gen0-Members-c1.0.dat: For a given cluster (Generator 0 example here), ligand names and the Tanimoto score overlap from the cluster center
+
