@@ -42,7 +42,8 @@ def cluster(matrix, distance_cutoff, cluster_cutoff=None):
 
     for i in xrange(cluster_cutoff):
         new_ind = seed if i == 0 else numpy.argmax(distance_list)
-        print "K-centers: Finding generator %i. Will finish when % .4f drops below % .4f" % (i, float(distance_list[new_ind]), float(distance_cutoff))
+        #print "K-centers: Finding generator %i. Will finish when % .4f drops below % .4f" % (i, float(distance_list[new_ind]), float(distance_cutoff))
+        print "K-centers: Finding generator %i. Will finish when Tanimoto % .4f is above % .4f" % (i, 2-float(distance_list[new_ind]), 2-float(distance_cutoff))
         if distance_list[new_ind] < distance_cutoff:
             break
         new_distance_list = matrix[new_ind, :]
@@ -55,23 +56,6 @@ def cluster(matrix, distance_cutoff, cluster_cutoff=None):
     return numpy.array(generator_indices), numpy.array(assignments), numpy.array(distance_list)
 
                                                            
-def clean_matrix(matrix):
-    print "Converting matrices to distance from the max Combo Tanimoto=2.00"
-    for x in range(0, matrix.shape[0]):
-        for y in range(0, matrix.shape[1]):
-            if matrix[x,y]!=matrix[y,x]:
-                maxval=numpy.max([matrix[x,y], matrix[y,x]])
-                matrix[x,y]=2-maxval
-                matrix[y,x]=2-maxval
-            else:
-                pass
-    for x in range(0, matrix.shape[0]):
-        for y in range(0, matrix.shape[1]):
-            if x==y:
-                matrix[x,y]=0
-    return matrix
-        
-
 def parse_commandline():
     parser = optparse.OptionParser()
     parser.add_option('-m', '--matrix', dest='matrix',
@@ -90,10 +74,12 @@ if __name__ == "__main__":
     if dir=="":
         dir="./"
     matrix=numpy.loadtxt('%s' % options.matrix)
-    matrix=clean_matrix(matrix)
+    # Convert Tanimoto value to Distance from the Max (2.00)
+    matrix=2.0-matrix
+    #matrix=clean_matrix(matrix)
     dbase=numpy.loadtxt('%s' % options.dbase, dtype=str)
 
-    print "Clustering scores based on distance from the max=2.00"
+    print "Clustering scores based on Max Tanimoto = 2.00"
     gens, assignments, distances=cluster(matrix, distance_cutoff=2-cutoff )
     frames=numpy.where(assignments!=-1)[0]
     # convert back to Tanimoto scores, instead of distance from the max=2
