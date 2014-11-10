@@ -1,4 +1,3 @@
-from msmbuilder import metrics
 import sys
 import glob
 import os
@@ -6,7 +5,6 @@ import sys
 import optparse
 import pickle
 import numpy
-from msmbuilder import Trajectory
 
 def assign(matrix, database, cutoff):
     distances=-1*numpy.ones(len(database))
